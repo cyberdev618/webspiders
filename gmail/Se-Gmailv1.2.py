@@ -1,5 +1,5 @@
 #import termux
-import os, time
+import os, time,termux
 from selenium import webdriver
 
 from selenium.webdriver.common.by import By 
@@ -127,8 +127,8 @@ class GmailCreator:
             elif 'code' in x:
                 print("phone condition\nThis should pipe into reverse ssh and into client phone to grab sms code data")
 
-                os.system('bash ~/android/adb/Se-Gmail.sms_code.sh') #need to rewrite the adb code, replace this hardcode with variable & UInput
-                import termux
+                os.system('bash android/adb/Se-Gmail.sms_code.sh') #need to rewrite the adb code, replace this hardcode with variable & UInput
+                #import termux
                 self.typing_simulator(self.gm_code, 'code', classType = "other")
                 time.sleep(3)
                 self.buttonClick()
