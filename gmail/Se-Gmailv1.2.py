@@ -143,7 +143,7 @@ class GmailCreator:
             
             elif 'code' in x:
                 print("phone condition\nThis should pipe into reverse ssh and into client phone to grab sms code data")
-
+                # call ssh library here itll gather up the instance and then run the below shelll script on the android phone
                 os.system('bash ../android/adb/Se-Gmail.sms_code.sh') #need to rewrite the adb code, replace this hardcode with variable & UInput
                 
                 self.typing_simulator(self.gm_code, 'code', classType = "other")
