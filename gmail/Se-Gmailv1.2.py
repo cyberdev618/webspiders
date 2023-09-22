@@ -27,24 +27,33 @@ class GmailCreator:
         self.phone = phone
         return(Fname, Lname, age,gender,DOB,passwd,phone)
 
+
     def typing_simulator(self, msg, attr,classType='' ):
         print('ClassType is : '+classType )
+        # gathers args in a tuple to a list
         msg = [*msg]
+        # iterate over the msg list
         for i in msg:
             time.sleep(1)
+
+            # checks classType and responds with proper method to handle the registration fields
+
+# if empty 
+
             if classType == '':
 
                 element = driver.find_element(By.NAME, attr)
                 element.send_keys(i)
                 for i in range(0,1):
                     time.sleep(i)
-                
+     
+# handle gender selection
             elif classType == 'Select':
                 element = Select(driver.find_element(By.ID, attr))
                 time.sleep(1)
                 element.select_by_value('1')
                 time.sleep(3)
-
+# enter phone number of user
             if 'phone' in attr:
                 element = driver.find_element(By.ID, attr)
                 element.send_keys(i)
@@ -65,16 +74,24 @@ class GmailCreator:
             
         
 #        variables = [Fname, Lname, month,day,year, gender,passwd, phone ]
-        
+#check the which field we are on so we can respond accordingly
+
         for x in fields:
             descr = x 
             print(descr)
-            
+        
+# the conditions to check the field names against 
+
+# Name has to handle first name and last name 
+# usually passes variable for personal info along with ID,[CLASS,TAG]_NAME
             if 'Name' in x:
 
+                # passes variable name fields and the unique identifier 
+                # personal info , html element attribute, attr 
                 self.typing_simulator(self.Fname, 'firstName')
                 self.typing_simulator(self.Lname, 'lastName')
 
+# button clicks 
                 button = driver.find_element(By.TAG_NAME, 'button')
                 button.click()
                 time.sleep(5)
@@ -82,7 +99,7 @@ class GmailCreator:
                 print("Buttons aftermath do you read#1")
 
 
-
+# password section
                
             elif 'Passwd' in x:
                 print('inside Passwd condition')
@@ -96,28 +113,28 @@ class GmailCreator:
 
 
                 print("this is the password condition"+self.passwd)
-                print(self.passwd+'for the second time confimations :')
+                print(self.passwd+'for the second time confirmations :')
 
+# special handling , month of birth date
             elif 'month' in x:
                 print('month condition')
                 self.birthday()
-                
+# gender section                
             elif 'gender' in x:
                 print('gender condition')
-                #self.typing_simulator("1", 'gender',classType="Selector")
-
                 gender = Select(driver.find_element(By.ID, 'gender'))
                 gender.select_by_visible_text('Female')
             
-            
                 self.buttonClick()
                 time.sleep(5)
-            
+
             elif 'Select' in x:
                 email = driver.find_element(By.ID, 'selectionc0').click()
+
                 self.buttonClick()
                 time.sleep(3)
-            
+# handle sms verification to bypass botcheck            
+#NOTICE: termux needs to be running a ssh server and setup of ssh pub/priv keypair should have already been done [ complex ]
             elif 'phone' in x:
                 print("phone condition\nThis should pipe into reverse ssh and into client phone to grab sms code data")
                 self.typing_simulator(self.phone, 'phoneNumberId', classType = "other")
@@ -127,19 +144,21 @@ class GmailCreator:
             elif 'code' in x:
                 print("phone condition\nThis should pipe into reverse ssh and into client phone to grab sms code data")
 
-                os.system('bash android/adb/Se-Gmail.sms_code.sh') #need to rewrite the adb code, replace this hardcode with variable & UInput
-                #import termux
+                os.system('bash ../android/adb/Se-Gmail.sms_code.sh') #need to rewrite the adb code, replace this hardcode with variable & UInput
+                
                 self.typing_simulator(self.gm_code, 'code', classType = "other")
                 time.sleep(3)
                 self.buttonClick()
 
-
-
+# clicks button in times when its just so redundant
     def buttonClick(self):
         button = driver.find_element(By.TAG_NAME, 'button')
         button.click()
 
+# birthday function 
+
     def birthday(self):
+        # hardcoded the birthday 
         month = Select(driver.find_element(By.ID, 'month'))
         month.select_by_visible_text("January")
         time.sleep(2)
@@ -150,9 +169,16 @@ class GmailCreator:
         
 
 
+# condition initiates main 
 if __name__ == '__main__':
+ 
+#instantiate class object for gmail creator
     gmail = GmailCreator()
+
+#populate object with users personal info 
     personal_info = gmail.person("Kleio", "Bash",22,'female', "Jan 23 1964","password",'xxx-xxx-xxxx')
+
+# send personal information to the 
     gmail.reg_fields(personal_info)
 
 
